@@ -65,8 +65,8 @@ WhackaMole.Game.prototype = {
         this.crosshair.anchor.setTo(0.5,0.5);
         this.physics.arcade.enable(this.crosshair);
         this.crosshair.collideWorldBounds = true;
-        //this.crosshair.body.maxVelocity.setTo(400, 400);
-        //this.crosshair.body.collideWorldBounds = true;
+        this.crosshair.body.maxVelocity.setTo(400, 400);
+        this.crosshair.body.collideWorldBounds = true;
 
 
         this.buildMoles();
@@ -258,26 +258,25 @@ WhackaMole.Game.prototype = {
     update: function() {
 
 
-        //if (this.cursors.left.isDown) {
-        //    this.crosshair.angle -= 4
-        //} else if (this.cursors.right.isDown) {
-        //    this.crosshair.angle += 4
-        //}
-        //
-        //if (this.cursors.up.isDown) {
-        //    // The speed we'll travel at
-        //    this.currentSpeed = 300
-        //} else {
-        //    if (this.currentSpeed > 0) {
-        //        this.currentSpeed -= 4
-        //    }
-        //}
-        //
-        //if (this.currentSpeed > 0) {
-        //    this.physics.velocityFromRotation(this.crosshair.rotation, this.currentSpeed, this.crosshair.body.velocity)
-        //
-        //}
+        if (this.cursors.left.isDown) {
+            this.crosshair.body.velocity.x = -100;
+        }
+        else if (this.cursors.right.isDown) {
+            this.crosshair.body.velocity.x = 100;
+        } else {this.crosshair.body.velocity.x = 0}
 
+        if (this.cursors.up.isDown) {
+            // The speed we'll travel at
+            this.crosshair.body.velocity.y = -100;
+        } else if
+        (this.cursors.down.isDown) {
+            this.crosshair.body.velocity.y = 100;
+        } else {this.crosshair.body.velocity.y = 0}
+
+        if (this.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR))
+        {
+            this.fireBurst(this.crosshair);
+        }
 
 
         this.physics.arcade.overlap(this.spacerockgroup, this.burst, this.burstCollision, null, this);
