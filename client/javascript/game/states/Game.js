@@ -42,6 +42,7 @@ WhackaMole.Game.prototype = {
         this.ouch = this.add.audio('hurt_audio');
         this.boom = this.add.audio('explosion_audio');
         this.ding = this.add.audio('select_audio');
+        this.input.keyboard.addKeyCapture([ Phaser.Keyboard.SPACEBAR ]);
         this.currentSpeed = 0;
 
 
