@@ -1,4 +1,4 @@
-BunnyDefender.Game = function(game) {
+WhackaMole.Game = function(game) {
     this.totalBunnies;
     this.bunnyGroup;
     this.totalSpacerocks;
@@ -13,39 +13,89 @@ BunnyDefender.Game = function(game) {
     this.ouch;
     this.boom;
     this.ding;
+    this.molegroup;
+    this.hole;
+    this.totalMoles;
+    this.crosshair;
+    this.currentSpeed;
+
 };
 
-BunnyDefender.Game.prototype = {
+
+
+
+WhackaMole.Game.prototype = {
 
     create: function() {
+
+        socket = io.connect();
+
         this.gameover = false;
         this.secondsElapsed = 0;
         this.timer = this.time.create(false);
         this.timer.loop(1000, this.updateSeconds, this);
         this.totalBunnies = 20;
         this.totalSpacerocks = 13;
-
+        this.cursors = this.game.input.keyboard.createCursorKeys()
         this.music = this.add.audio('game_audio');
         this.music.play('', 0, 0.3, true);
         this.ouch = this.add.audio('hurt_audio');
         this.boom = this.add.audio('explosion_audio');
         this.ding = this.add.audio('select_audio');
+        this.currentSpeed = 0;
+
 
         this.buildWorld();
+
+
     },
 
     updateSeconds: function() {
         this.secondsElapsed++;
+
     },
 
     buildWorld: function() {
         this.add.image(0, 0, 'sky');
-        this.add.image(0, 800, 'hill');
+        this.add.image(0, 0, 'stars');
+        this.add.image(0, 0, 'land');
+
+
+        this.crosshair = this.add.sprite(this.world.centerX,this.world.centerY, 'crosshair');
+        this.crosshair.anchor.setTo(0.5,0.5);
+        this.physics.arcade.enable(this.crosshair);
+        this.crosshair.collideWorldBounds = true;
+        //this.crosshair.body.maxVelocity.setTo(400, 400);
+        //this.crosshair.body.collideWorldBounds = true;
+
+
+        this.buildMoles();
         this.buildBunnies();
         this.buildSpaceRocks();
         this.buildEmitter();
-        this.countdown = this.add.bitmapText(10, 10, 'eightbitwonder', 'Bunnies Left ' + this.totalBunnies, 20);
+        this.countdown = this.add.bitmapText(10, 10, 'eightbitwonder', 'Moles Whacked ' + this.totalBunnies, 20);
         this.timer.start();
+    },
+
+    buildMoles: function(){
+        this.molegroup = this.add.group();
+        this.molegroup.enablebody = true;
+        this.totalMoles = 4;
+        var m1 = this.molegroup.create(this.world.width - 400, this.world.height-100, 'mole', '2');
+        m1.anchor.setTo(0.5, 0.5);
+        m1.animations.add('Up');
+        m1.animations.play('Up', 1, true);
+        var m2 = this.molegroup.create(this.world.width-200, this.world.height -400, 'mole', '2');
+        m2.anchor.setTo(0.5, 0.5);
+        m2.animations.add('Up');
+        m2.animations.play('Up', 1, true);
+        var m3 = this.molegroup.create(this.world.width - 400, this.world.height - 300, 'mole', '2');
+        m3.anchor.setTo(0.5, 0.5);
+        m3.animations.add('Up');
+        m3.animations.play('Up', 1, true);
+
+
+
     },
 
     buildBunnies: function() {
@@ -61,6 +111,8 @@ BunnyDefender.Game.prototype = {
             this.assignBunnyMovement(b);
         }
     },
+
+
 
     assignBunnyMovement: function(b) {
         bposition = Math.floor(this.rnd.realInRange(50, this.world.width-50));
@@ -80,10 +132,20 @@ BunnyDefender.Game.prototype = {
         b.animations.play('Walk', 24, true);
     },
 
+    startMole: function(m){
+        m.animations.stop('down');
+        m.animations.play('up')
+    },
+
     stopBunny: function(b) {
         b.animations.stop('Walk');
         b.animations.play('Rest', 24, true);
         this.assignBunnyMovement(b);
+    },
+
+    stopMole: function(m) {
+        m.animations.stop('up');
+        m.animations.play('down');
     },
 
     buildSpaceRocks: function() {
@@ -194,27 +256,34 @@ BunnyDefender.Game.prototype = {
 
 
     update: function() {
+
+
+        //if (this.cursors.left.isDown) {
+        //    this.crosshair.angle -= 4
+        //} else if (this.cursors.right.isDown) {
+        //    this.crosshair.angle += 4
+        //}
+        //
+        //if (this.cursors.up.isDown) {
+        //    // The speed we'll travel at
+        //    this.currentSpeed = 300
+        //} else {
+        //    if (this.currentSpeed > 0) {
+        //        this.currentSpeed -= 4
+        //    }
+        //}
+        //
+        //if (this.currentSpeed > 0) {
+        //    this.physics.velocityFromRotation(this.crosshair.rotation, this.currentSpeed, this.crosshair.body.velocity)
+        //
+        //}
+
+
+
         this.physics.arcade.overlap(this.spacerockgroup, this.burst, this.burstCollision, null, this);
         this.physics.arcade.overlap(this.spacerockgroup, this.bunnygroup, this.bunnyCollision, null, this);
-        this.physics.arcade.overlap(this.bunnygroup, this.burst, this.friendlyFire, null, this);
+        this.physics.arcade.overlap(this.bunnygroup, this.burst, this.friendlyFire, null);
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 };

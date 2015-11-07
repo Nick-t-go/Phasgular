@@ -1,9 +1,9 @@
-BunnyDefender.StartMenu = function(game) {
+WhackaMole.StartMenu = function(game) {
     this.startBG;
     this.startPrompt;
-}
+};
 
-BunnyDefender.StartMenu.prototype = {
+WhackaMole.StartMenu.prototype = {
 
 	create: function () {
 		startBG = this.add.image(0, 0 , 'titlescreen');

@@ -3,13 +3,21 @@ var path         = require('path');
 var logger       = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser   = require('body-parser');
+var http         = require('http');
 
 var app = express();
 
 app.use(express.static(path.join(__dirname, 'views')));
-var server = require('http').Server(app);
-var io     = require('socket.io')(server);
+
+var server = http.createServer(app);
+
+
 var routes = require('./server/routes/index');
+
+var io = require('socket.io').listen(server); //important
+
+
+
 
 
 app.use(logger('dev'));
@@ -21,11 +29,15 @@ app.use('/', routes);
 
 
 
-var port = process.env.PORT || 8000;
+var port = process.env.PORT || 8001;
 
 server.listen(port, function() {
     console.log("Running on port", port);
+    require('./GameSetup')(io);
+
 });
+
+
 
 
 // catch 404 and forward to error handler
@@ -34,6 +46,16 @@ app.use(function(req, res, next) {
     err.status = 404;
     next(err);
 });
+
+
+
+
+
+
+require('./GameSetup')(io); //important
+
+
+
 
 // error handlers
 

@@ -1,8 +1,8 @@
-var BunnyDefender = {};
+var WhackaMole = {};
 
-BunnyDefender.Boot = function(game) {};
+WhackaMole.Boot = function(game) {};
 
-BunnyDefender.Boot.prototype = {
+WhackaMole.Boot.prototype = {
 	preload: function() {
 		this.load.image('preloaderBar', 'images/loadbar.png');
 		this.load.image('titleimage', 'images/titleimage.png');
