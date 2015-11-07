@@ -1,0 +1,12 @@
+/**
+ * Created by uzer-y on 11/6/15.
+ */
+var express = require('express');
+var router = express.Router();
+
+
+router.get(function(req, res){
+    res.sendfile('index.html');
+});
+
+module.exports = router;
