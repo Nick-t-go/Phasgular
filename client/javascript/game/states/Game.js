@@ -18,6 +18,7 @@ WhackaMole.Game = function(game) {
     this.totalMoles;
     this.crosshair;
     this.currentSpeed;
+    this.emitter
 
 };
 
@@ -36,7 +37,7 @@ WhackaMole.Game.prototype = {
         this.timer.loop(1000, this.updateSeconds, this);
         this.totalBunnies = 20;
         this.totalSpacerocks = 13;
-        this.cursors = this.game.input.keyboard.createCursorKeys()
+        this.cursors = this.game.input.keyboard.createCursorKeys();
         this.music = this.add.audio('game_audio');
         this.music.play('', 0, 0.3, true);
         this.ouch = this.add.audio('hurt_audio');
@@ -47,6 +48,7 @@ WhackaMole.Game.prototype = {
 
 
         this.buildWorld();
+        this.makeItRain();
 
 
     },
@@ -95,6 +97,28 @@ WhackaMole.Game.prototype = {
         m3.animations.add('Up');
         m3.animations.play('Up', 1, true);
 
+
+
+    },
+
+    makeItRain: function() {
+        this.emitter = this.add.emitter(this.world.centerX, 0, 400);
+
+        this.emitter.width = this.world.width;
+        // emitter.angle = 30; // uncomment to set an angle for the rain.
+
+        this.emitter.makeParticles('stars');
+
+        this.emitter.minParticleScale = 0.1;
+        this.emitter.maxParticleScale = 0.5;
+
+        this.emitter.setYSpeed(300, 500);
+        this.emitter.setXSpeed(-5, 5);
+
+        this.emitter.minRotation = 0;
+        this.emitter.maxRotation = 0;
+
+        this.emitter.start(false, 1600, 5, 0);
 
 
     },
