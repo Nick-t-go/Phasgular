@@ -67,11 +67,11 @@ function onNewPlayer(data) {
 // Player has moved
 function onMovePlayer(data) {
     // Find player in array
-    var movePlayer = playerById(this.id)
+    var movePlayer = playerById(this.id);
 
     // Player not found
     if (!movePlayer) {
-        util.log('Player not found: ' + this.id)
+        util.log('Player not found: ' + this.id);
         return
     }
 

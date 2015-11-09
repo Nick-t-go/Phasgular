@@ -16,6 +16,7 @@ WhackaMole.Preloader.prototype = {
 		this.load.bitmapFont('eightbitwonder', 'fonts/eightbitwonder.png', 'fonts/eightbitwonder.fnt');
 		this.load.image('land', 'images/land.png');
 		this.load.image('sky', 'images/sky.png');
+		this.load.image('spacemole', 'images/spaceMole.png');
 		this.load.image('moon', 'images/moon.png');
 		this.load.image('stars', 'images/stars.png');
 		this.load.image('crosshair', 'images/crosshair.png');
