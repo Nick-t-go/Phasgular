@@ -70,7 +70,7 @@ WhackaMole.Game.prototype = {
         this.add.image(40, 40, 'sun');
 
         this.buildMoleHoles();
-        this.buildMoles();
+        this.molesInit();
         this.buildSpaceMoles();
 
 
@@ -90,23 +90,50 @@ WhackaMole.Game.prototype = {
         this.timer.start();
     },
 
-    buildMoles: function(){
+    buildMoles: function(x,y){
+        var that = this;
+        var newMole = this.molegroup.create(x,y, 'mole');
+        newMole.anchor.setTo(0.5, 0.5);
+        this.physics.enable(newMole, Phaser.Physics.ARCADE);
+        newMole.enableBody = true;
+        newMole.animations.add('Up',[1,2,3,4,5,6,5,6,5,6,6,5,4,3,2,1,0,0,0,0,0,0]);
+        newMole.animations.add('Down',[6,5,4,3,2,1,0]);
+        var random = that.rnd.integerInRange(1, 25);
+        newMole.animations.play('Up', random, true);
+        //var mA1 = this.molegroup.create(87, 440, 'mole');
+        //var mA2 = this.molegroup.create(87, 660, 'mole');
+        //var mB1 = this.molegroup.create(273, 370, 'mole');
+        //var mB2 = this.molegroup.create(273, 540, 'mole');
+        //var mB3 = this.molegroup.create(273, 775, 'mole');
+        //var mC1 = this.molegroup.create(450, 440, 'mole');
+        //var mC2 = this.molegroup.create(450, 660, 'mole');
+        //this.molegroup.forEach(function(mole) {
+        //    mole.anchor.setTo(0.5, 0.5);
+        //    that.physics.enable(mole, Phaser.Physics.ARCADE);
+        //    mole.enableBody = true;
+        //    mole.animations.add('Up',[1,2,3,4,5,6,5,6,5,6,6,5,4,3,2,1,0,0,0,0,0,0]);
+        //    mole.animations.add('Down',[6,5,4,3,2,1,0]);
+        //    var random = that.rnd.integerInRange(1, 25);
+        //    mole.animations.play('Up', random, true)
+        //});
+
+    },
+
+    molesInit: function() {
         this.molegroup = this.add.group();
         this.molegroup.enablebody = true;
-        this.totalMoles = 4;
-        var mA1 = this.molegroup.create(87, 440, 'mole');
-        var mA2 = this.molegroup.create(87, 660, 'mole');
-        var mB1 = this.molegroup.create(273, 370, 'mole');
-        var mB2 = this.molegroup.create(273, 540, 'mole');
-        var mB3 = this.molegroup.create(273, 775, 'mole');
-        var mC1 = this.molegroup.create(450, 440, 'mole');
-        var mC2 = this.molegroup.create(450, 660, 'mole');
-        this.molegroup.forEach(function(mole) {
-            mole.anchor.setTo(0.5, 0.5);
-            mole.animations.add('Up',[1,2,3,4,5,6,5,6,5,6,6,5,4,3,2,1,0]);
-            mole.animations.add('Down',[6,5,4,3,2,1,0]);
-            mole.animations.play('Up', 4, true);
-        });
+        this.buildMoles(87,440);
+        this.buildMoles(87,640);
+        this.buildMoles(273,370);
+        this.buildMoles(273,540);
+        this.buildMoles(273,775);
+        this.buildMoles(450,440);
+        this.buildMoles(450,660);
+
+    },
+
+    moleloop: function(m, num){
+        m.animations.play('Up',num, true);
     },
 
     buildMoleHoles: function(){
@@ -267,6 +294,8 @@ WhackaMole.Game.prototype = {
 
 
 
+
+
     //resetRock: function(r) {
     //    if(r.y > this.world.height) {
     //        this.respawnRock(r);
@@ -296,7 +325,7 @@ WhackaMole.Game.prototype = {
             this.boom.volume = 0.2;
             this.burst.emitX = pointer.x;
             this.burst.emitY = pointer.y;
-            this.burst.start(true, 2000, null, 20);
+            this.burst.start(true, 5000, null, 20);
         }
     },
 
@@ -324,6 +353,29 @@ WhackaMole.Game.prototype = {
             this.molesWhacked += 1;
             this.countdown.setText('Moles Whacked ' + this.molesWhacked)
         }
+    },
+
+    moleCollision: function(m) {
+        console.log('got into collision')
+        if(m.exists){
+            this.ouch.play();
+            this.respawnMole(m);
+            //add explostion
+            m.kill();
+            this.molesWhacked += 1;
+            this.countdown.setText('Moles Whacked ' + this.molesWhacked)
+        }
+    },
+
+    respawnMole: function(m){
+        that = this;
+        if(this.gameover == false){
+            this.time.events.add(Phaser.Timer.SECOND * 5, function() {
+                that.buildMoles(m.x, m.y);
+                console.log('it happened');
+            })
+        }
+
     },
 
 
@@ -372,20 +424,22 @@ WhackaMole.Game.prototype = {
 
     update: function() {
 
+        var that = this;
+
 
         if (this.cursors.left.isDown) {
-            this.crosshair.body.velocity.x = -100;
+            this.crosshair.body.velocity.x = -200;
         }
         else if (this.cursors.right.isDown) {
-            this.crosshair.body.velocity.x = 100;
+            this.crosshair.body.velocity.x = 200;
         } else {this.crosshair.body.velocity.x = 0}
 
         if (this.cursors.up.isDown) {
             // The speed we'll travel at
-            this.crosshair.body.velocity.y = -100;
+            this.crosshair.body.velocity.y = -200;
         } else if
         (this.cursors.down.isDown) {
-            this.crosshair.body.velocity.y = 100;
+            this.crosshair.body.velocity.y = 200;
         } else {this.crosshair.body.velocity.y = 0}
 
         if (this.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR))
@@ -394,12 +448,12 @@ WhackaMole.Game.prototype = {
         }
 
         this.spacemolegroup.forEach(function(mole){
-            mole.rotation += .02
-        })
+            mole.rotation += .02;
+        });
 
 
         this.physics.arcade.overlap(this.spacemolegroup, this.burst, this.spacemoleCollision, null, this);
-        //this.physics.arcade.overlap(this.spacerockgroup, this.bunnygroup, this.bunnyCollision, null, this);
+        this.physics.arcade.overlap(this.molegroup, this.burst, this.moleCollision, null, this);
         //this.physics.arcade.overlap(this.bunnygroup, this.burst, this.friendlyFire, null);
     }
 
