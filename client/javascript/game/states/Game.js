@@ -11,6 +11,7 @@ WhackaMole.Game = function(game) {
     this.gameover;
     this.countdown;
     this.overmessage;
+    this.newBomb;
     this.secondsElapsed;
     this.timer;
     this.music;
@@ -19,7 +20,6 @@ WhackaMole.Game = function(game) {
     this.ding;
     this.molegroup;
     this.hole;
-    this.totalMoles;
     this.crosshair;
     this.currentSpeed;
     this.emitter;
@@ -76,6 +76,7 @@ WhackaMole.Game.prototype = {
 
         this.buildMoleHoles();
         this.molesInit();
+        this.bombInit();
         this.buildSpaceMoles();
 
 
@@ -87,9 +88,7 @@ WhackaMole.Game.prototype = {
         this.crosshair.body.collideWorldBounds = true;
 
 
-        //this.buildBunnies();
-        //this.buildSpaceRocks();
-        //this.time.events.repeat(Phaser.Timer.SECOND * .5, 100, this.buildSpaceMoles, this);
+
         this.buildEmitter();
         this.countdown = this.add.bitmapText(10, 10, 'eightbitwonder', 'Moles Whacked ' + this.molesWhacked, 20);
         this.timer.start();
@@ -107,22 +106,6 @@ WhackaMole.Game.prototype = {
         console.log(newMole.animations.currentAnim.loopCount);
 
 
-        //var mA1 = this.molegroup.create(87, 440, 'mole');
-        //var mA2 = this.molegroup.create(87, 660, 'mole');
-        //var mB1 = this.molegroup.create(273, 370, 'mole');
-        //var mB2 = this.molegroup.create(273, 540, 'mole');
-        //var mB3 = this.molegroup.create(273, 775, 'mole');
-        //var mC1 = this.molegroup.create(450, 440, 'mole');
-        //var mC2 = this.molegroup.create(450, 660, 'mole');
-        //this.molegroup.forEach(function(mole) {
-        //    mole.anchor.setTo(0.5, 0.5);
-        //    that.physics.enable(mole, Phaser.Physics.ARCADE);
-        //    mole.enableBody = true;
-        //    mole.animations.add('Up',[1,2,3,4,5,6,5,6,5,6,6,5,4,3,2,1,0,0,0,0,0,0]);
-        //    mole.animations.add('Down',[6,5,4,3,2,1,0]);
-        //    var random = that.rnd.integerInRange(1, 25);
-        //    mole.animations.play('Up', random, true)
-        //});
 
     },
 
@@ -201,68 +184,6 @@ WhackaMole.Game.prototype = {
 
     },
 
-    //buildBunnies: function() {
-    //    this.bunnygroup = this.add.group();
-    //    this.bunnygroup.enableBody = true;
-    //    for(var i=0; i<this.totalBunnies; i++) {
-    //        var b = this.bunnygroup.create(this.rnd.integerInRange(-10, this.world.width-50), this.rnd.integerInRange(this.world.height-180, this.world.height-60), 'bunny', 'Bunny0000');
-    //        b.anchor.setTo(0.5, 0.5);
-    //        b.body.moves = false;
-    //        b.animations.add('Rest', this.game.math.numberArray(1,58));
-    //        b.animations.add('Walk', this.game.math.numberArray(68,107));
-    //        b.animations.play('Rest', 24, true);
-    //        this.assignBunnyMovement(b);
-    //    }
-    //},
-
-
-
-    //assignBunnyMovement: function(b) {
-    //    bposition = Math.floor(this.rnd.realInRange(50, this.world.width-50));
-    //    bdelay = this.rnd.integerInRange(2000, 6000);
-    //    if(bposition < b.x){
-    //        b.scale.x = 1;
-    //    }else{
-    //        b.scale.x = -1;
-    //    }
-    //    t = this.add.tween(b).to({x:bposition}, 3500, Phaser.Easing.Quadratic.InOut, true, bdelay);
-    //    t.onStart.add(this.startBunny, this);
-    //    t.onComplete.add(this.stopBunny, this);
-    //},
-
-    //startBunny: function(b) {
-    //    b.animations.stop('Rest');
-    //    b.animations.play('Walk', 24, true);
-    //},
-
-
-    stopBunny: function(b) {
-        b.animations.stop('Walk');
-        b.animations.play('Rest', 24, true);
-        this.assignBunnyMovement(b);
-    },
-
-    stopMole: function(m) {
-        m.animations.stop('up');
-        m.animations.play('down');
-    },
-
-    //buildSpaceRocks: function() {
-    //    this.spacerockgroup = this.add.group();
-    //    for(var i=0; i<this.totalSpacerocks; i++) {
-    //        var r = this.spacerockgroup.create(this.rnd.integerInRange(0, this.world.width), this.rnd.realInRange(-1500, 0), 'spacerock', 'SpaceRock0000');
-    //        var scale = this.rnd.realInRange(0.3, 1.0);
-    //        r.scale.x = scale;
-    //        r.scale.y = scale;
-    //        this.physics.enable(r, Phaser.Physics.ARCADE);
-    //        r.enableBody = true;
-    //        r.body.velocity.y = this.rnd.integerInRange(200, 400);
-    //        r.animations.add('Fall');
-    //        r.animations.play('Fall', 24, true);
-    //        r.checkWorldBounds = true;
-    //        r.events.onOutOfBounds.add(this.resetRock, this);
-    //    }
-    //},
 
     buildSpaceMoles: function() {
         this.spacemolegroup = this.add.group();
@@ -303,23 +224,10 @@ WhackaMole.Game.prototype = {
     pointsTweener: function(kill){
         this.points = this.add.bitmapText(kill.x, kill.y, 'eightbitwonder', '100', 20);
         console.log(this.points);
-        this.add.tween(that.points).to({ alpha: 0}, 2000, Phaser.Easing.Linear.None, true);
+        this.add.tween(this.points).to({ alpha: 0}, 2000, Phaser.Easing.Linear.None, true);
 
     },
 
-
-    //resetRock: function(r) {
-    //    if(r.y > this.world.height) {
-    //        this.respawnRock(r);
-    //    }
-    //},
-    //
-    //respawnRock: function(r) {
-    //    if(this.gameover == false){
-    //        r.reset(this.rnd.integerInRange(0, this.world.width), this.rnd.realInRange(-1500, 0));
-    //        r.body.velocity.y = this.rnd.integerInRange(200, 400);
-    //    }
-    //},
 
     buildEmitter:function() {
         this.burst = this.add.emitter(0, 0, 80);
@@ -381,6 +289,19 @@ WhackaMole.Game.prototype = {
         }
     },
 
+
+    bombCollision: function(b) {
+        console.log('got into collision')
+        if(b.exists){
+            this.ouch.play();
+            //add explostion
+            b.kill();
+            this.pointsTweener(b);
+            this.molesWhacked -= 1;
+            this.countdown.setText('Moles Whacked ' + this.molesWhacked)
+        }
+    },
+
     respawnMole: function(m){
         console.log(m);
         that = this;
@@ -393,61 +314,18 @@ WhackaMole.Game.prototype = {
 
     },
 
-    buildBomb: function(x, y){
+    bombInit: function(){
         this.bombGroup = this.add.group();
-        var that = this;
-        var newBomb = this.bombGroup.create(x,y, 'bomb');
-        newBomb.anchor.setTo(0.5, 0.5);
-        this.physics.enable(newBomb, Phaser.Physics.ARCADE);
-        newBomb.enableBody = true;
-        this.time.events.add(Phaser.Timer.SECOND * 3, function(){
-            newBomb.kill();
-            that.respawnMole(newBomb);
-        })
-
     },
 
-
-
-
-    //checkBunniesLeft: function() {
-    //    if(this.totalBunnies <= 0){
-    //        this.gameover = true;
-    //        this.music.stop();
-    //        this.countdown.setText('Bunnies Left 0');
-    //        this.overmessage = this.add.bitmapText(this.world.centerX-180, this.world.centerY-40, 'eightbitwonder', 'GAME OVER\n\n' + this.secondsElapsed, 42);
-    //        this.overmessage.align = "center";
-    //        this.overmessage.inputEnabled = true;
-    //        this.overmessage.events.onInputDown.addOnce(this.quitGame, this);
-    //    }else {
-    //        this.countdown.setText('Bunnies Left ' + this.totalBunnies);
-    //    }
-    //},
-
-    //quitGame:function(pointer) {
-    //    this.ding.play();
-    //    this.state.start('StartMenu');
-    //},
-
-    //friendlyFire: function(b, e){
-    //    if(b.exists){
-    //        this.ouch.play();
-    //        this.makeGhost(b);
-    //        b.kill();
-    //        this.totalBunnies--;
-    //        this.checkBunniesLeft();
-    //    }
-    //},
-
-    //makeGhost: function(b) {
-    //    bunnyghost = this.add.sprite(b.x-20, b.y-180, 'ghost');
-    //    bunnyghost.anchor.setTo(0.5, 0.5);
-    //    bunnyghost.scale.x = b.scale.x;
-    //    this.physics.enable(bunnyghost, Phaser.Physics.ARCADE);
-    //    bunnyghost.enableBody = true;
-    //    bunnyghost.checkWorldBounds = true;
-    //    bunnyghost.body.velocity.y = -800;
-    //},
+    buildBomb: function(x, y){
+        var name = (x+y).toString();
+        this[name] = this.bombGroup.create(x,y, 'bomb');
+        this[name].anchor.setTo(0.5, 0.5);
+        this.physics.enable(this[x+y], Phaser.Physics.ARCADE);
+        this[name].enableBody = true;
+        this[name].lifespan = 3000;
+    },
 
 
 
@@ -480,21 +358,20 @@ WhackaMole.Game.prototype = {
             mole.rotation += .02;
         });
 
-        //this.molegroup.forEach(function(mole){
-        //    if(mole.animations.currentAnim.loopCount == 3){
-        //        that.respawnMole(mole);
-        //        mole.kill();
-        //    }
-        //});
+        if(this.bombGroup) {
+            this.bombGroup.forEach(function (bomb) {
+                if(!bomb.visible ){
+                    that.respawnMole(bomb);
+                    bomb.destroy();
+                }
 
-        //if(this.animationReference){
-        //
-        //}
+            });
+        }
 
 
         this.physics.arcade.overlap(this.spacemolegroup, this.burst, this.spacemoleCollision, null, this);
         this.physics.arcade.overlap(this.molegroup, this.burst, this.moleCollision, null, this);
-        //this.physics.arcade.overlap(this.bunnygroup, this.burst, this.friendlyFire, null);
+        this.physics.arcade.overlap(this.bombGroup, this.burst, this.bombCollision, null, this);
     }
 
 
