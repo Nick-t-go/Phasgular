@@ -24,6 +24,8 @@ WhackaMole.Game = function(game) {
     this.emitter;
     this.molesWhacked;
     this.pausedText;
+    this.points;
+    this.pointsTween;
 
 };
 
@@ -293,7 +295,12 @@ WhackaMole.Game.prototype = {
     },
 
 
+    pointsTweener: function(kill){
+        this.points = this.add.bitmapText(kill.x, kill.y, 'eightbitwonder', '100', 20);
+        console.log(this.points);
+        this.add.tween(that.points).to({ alpha: 0}, 2000, Phaser.Easing.Linear.None, true);
 
+    },
 
 
     //resetRock: function(r) {
@@ -350,6 +357,7 @@ WhackaMole.Game.prototype = {
             //this.respawnSpacemole(sm);
             //add explostion
             sm.kill();
+            //this.pointsTweener(sm);
             this.molesWhacked += 1;
             this.countdown.setText('Moles Whacked ' + this.molesWhacked)
         }
@@ -362,6 +370,7 @@ WhackaMole.Game.prototype = {
             this.respawnMole(m);
             //add explostion
             m.kill();
+            this.pointsTweener(m);
             this.molesWhacked += 1;
             this.countdown.setText('Moles Whacked ' + this.molesWhacked)
         }
@@ -372,7 +381,6 @@ WhackaMole.Game.prototype = {
         if(this.gameover == false){
             this.time.events.add(Phaser.Timer.SECOND * 5, function() {
                 that.buildMoles(m.x, m.y);
-                console.log('it happened');
             })
         }
 
