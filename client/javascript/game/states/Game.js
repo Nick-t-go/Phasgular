@@ -5,6 +5,7 @@ WhackaMole.Game = function(game) {
     this.moleholegroup;
     this.totalSpacemoles
     this.spacerockgroup;
+    this.bombGroup;
     this.spacemolegroup;
     this.burst;
     this.gameover;
@@ -26,6 +27,8 @@ WhackaMole.Game = function(game) {
     this.pausedText;
     this.points;
     this.pointsTween;
+    this.animationReference;
+    this.bomb;
 
 };
 
@@ -99,9 +102,11 @@ WhackaMole.Game.prototype = {
         this.physics.enable(newMole, Phaser.Physics.ARCADE);
         newMole.enableBody = true;
         newMole.animations.add('Up',[1,2,3,4,5,6,5,6,5,6,6,5,4,3,2,1,0,0,0,0,0,0]);
-        newMole.animations.add('Down',[6,5,4,3,2,1,0]);
         var random = that.rnd.integerInRange(1, 25);
         newMole.animations.play('Up', random, true);
+        console.log(newMole.animations.currentAnim.loopCount);
+
+
         //var mA1 = this.molegroup.create(87, 440, 'mole');
         //var mA2 = this.molegroup.create(87, 660, 'mole');
         //var mB1 = this.molegroup.create(273, 370, 'mole');
@@ -377,12 +382,28 @@ WhackaMole.Game.prototype = {
     },
 
     respawnMole: function(m){
+        console.log(m);
         that = this;
         if(this.gameover == false){
-            this.time.events.add(Phaser.Timer.SECOND * 5, function() {
-                that.buildMoles(m.x, m.y);
+            this.time.events.add(Phaser.Timer.SECOND * 3, function() {
+                var random = that.rnd.integerInRange(1, 100);
+                random % 2 == 0 ? that.buildMoles(m.x, m.y) : that.buildBomb(m.x, m.y)
             })
         }
+
+    },
+
+    buildBomb: function(x, y){
+        this.bombGroup = this.add.group();
+        var that = this;
+        var newBomb = this.bombGroup.create(x,y, 'bomb');
+        newBomb.anchor.setTo(0.5, 0.5);
+        this.physics.enable(newBomb, Phaser.Physics.ARCADE);
+        newBomb.enableBody = true;
+        this.time.events.add(Phaser.Timer.SECOND * 3, function(){
+            newBomb.kill();
+            that.respawnMole(newBomb);
+        })
 
     },
 
@@ -458,6 +479,17 @@ WhackaMole.Game.prototype = {
         this.spacemolegroup.forEach(function(mole){
             mole.rotation += .02;
         });
+
+        //this.molegroup.forEach(function(mole){
+        //    if(mole.animations.currentAnim.loopCount == 3){
+        //        that.respawnMole(mole);
+        //        mole.kill();
+        //    }
+        //});
+
+        //if(this.animationReference){
+        //
+        //}
 
 
         this.physics.arcade.overlap(this.spacemolegroup, this.burst, this.spacemoleCollision, null, this);
