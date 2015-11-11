@@ -25,6 +25,7 @@ WhackaMole.Preloader.prototype = {
 		this.load.image('start', 'images/newPressStart.png');
 		this.load.image('crosshair', 'images/crosshair.png');
 		this.load.image('mole', 'images/newMole.png');
+		this.load.atlasJSONHash('mole', 'images/spritesheets/molepop.png', 'images/spritesheets/molepop.json');
 		this.load.atlasXML('bunny', 'images/spritesheets/bunny.png', 'images/spritesheets/bunny.xml');
 		this.load.atlasXML('spacerock', 'images/spritesheets/SpaceRock.png', 'images/spritesheets/SpaceRock.xml');
 		this.load.image('explosion', 'images/explosion.png');

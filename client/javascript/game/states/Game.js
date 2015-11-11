@@ -103,6 +103,9 @@ WhackaMole.Game.prototype = {
         var mC2 = this.molegroup.create(450, 660, 'mole');
         this.molegroup.forEach(function(mole) {
             mole.anchor.setTo(0.5, 0.5);
+            mole.animations.add('Up',[1,2,3,4,5,6,5,6,5,6,6,5,4,3,2,1,0]);
+            mole.animations.add('Down',[6,5,4,3,2,1,0]);
+            mole.animations.play('Up', 4, true);
         });
     },
 
@@ -119,7 +122,6 @@ WhackaMole.Game.prototype = {
         this.moleholegroup.forEach(function(molehole){
             molehole.anchor.setTo(0.5, 0.5);
         });
-        console.log(this.moleholegroup);
     },
 
     makeItRain: function() {
