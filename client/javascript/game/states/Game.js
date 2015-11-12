@@ -101,10 +101,9 @@ WhackaMole.Game.prototype = {
         this.physics.enable(newMole, Phaser.Physics.ARCADE);
         newMole.enableBody = true;
         newMole.animations.add('Up',[1,2,3,4,5,6,5,6,5,6,6,5,4,3,2,1,0,0,0,0,0,0]);
-        var random = that.rnd.integerInRange(1, 25);
+        var random = that.rnd.integerInRange(5, 25);
         newMole.animations.play('Up', random, true);
-        console.log(newMole.animations.currentAnim.loopCount);
-
+        console.log(newMole.animations.currentAnim);
 
 
     },
@@ -197,7 +196,6 @@ WhackaMole.Game.prototype = {
             sm.pivot.x += 5;
             sm_x = sm_x + 180;
             sm_y = sm_y - 100;
-            console.log("Came through here")
 
         }
 
@@ -222,7 +220,7 @@ WhackaMole.Game.prototype = {
 
 
     pointsTweener: function(kill){
-        this.points = this.add.bitmapText(kill.x, kill.y, 'eightbitwonder', '100', 20);
+        this.points = this.add.bitmapText(kill.x, kill.y, 'eightbitwonder', "100", 20);
         console.log(this.points);
         this.add.tween(this.points).to({ alpha: 0}, 2000, Phaser.Easing.Linear.None, true);
 
@@ -363,6 +361,18 @@ WhackaMole.Game.prototype = {
                 if(!bomb.visible ){
                     that.respawnMole(bomb);
                     bomb.destroy();
+                }
+
+            });
+        }
+
+        if(this.molegroup) {
+            this.molegroup.forEach(function (mole) {
+                if(mole.animations.currentAnim.loopCount == 1 ){
+                    mole.destroy();
+                    that.respawnMole(mole);
+                    console.log("destroy")
+
                 }
 
             });
