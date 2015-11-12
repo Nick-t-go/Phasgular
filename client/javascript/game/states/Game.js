@@ -48,6 +48,8 @@ WhackaMole.Game = function(game) {
     this.pointsTween;
     this.animationReference;
     this.bomb;
+    this.newMole;
+    this.newBomb;
 
     this.bmd;
 
@@ -189,14 +191,13 @@ WhackaMole.Game.prototype = {
     },
 
     buildMoles: function(a,b){
-        var that = this;
-        var newMole = this.molegroup.create(a,b, 'mole');
-        newMole.anchor.setTo(0.5, 0.5);
-        this.physics.enable(newMole, Phaser.Physics.ARCADE);
-        newMole.enableBody = true;
-        newMole.animations.add('Up',[1,2,3,4,5,6,5,6,5,6,6,5,4,3,2,1,0,0,0,0,0,0]);
-        var random = that.rnd.integerInRange(10, 20);
-        newMole.animations.play('Up', random, true);
+        this.newMole = this.molegroup.create(a,b, 'mole');
+        this.newMole.anchor.setTo(0.5, 0.5);
+        this.physics.enable(this.newMole, Phaser.Physics.ARCADE);
+        this.newMole.enableBody = true;
+        this.newMole.animations.add('Up',[1,2,3,4,5,6,5,6,5,6,6,5,4,3,2,1,0,0,0,0,0,0]);
+        var random = this.rnd.integerInRange(10, 20);
+        this.newMole.animations.play('Up', random, true);
 
 
 
@@ -400,13 +401,13 @@ WhackaMole.Game.prototype = {
     },
 
     buildBomb: function(c, d){
-        var newBomb = this.bombGroup.create(c,d, 'bombexplode');
-        newBomb.anchor.setTo(0.5, 0.5);
-        this.physics.enable(newBomb, Phaser.Physics.ARCADE);
-        newBomb.enableBody = true;
-        newBomb.animations.add('grow', [1,2,3,4,5,6,7,5,6,5,7]);
+        this.newBomb = this.bombGroup.create(c,d, 'bombexplode');
+        this.newBomb.anchor.setTo(0.5, 0.5);
+        this.physics.enable(this.newBomb, Phaser.Physics.ARCADE);
+        this.newBomb.enableBody = true;
+        this.newBomb.animations.add('grow', [1,2,3,4,5,6,7,5,6,5,7]);
         //this.newBomb.animations.add('baboom', [13,14,15]);
-        newBomb.animations.play('grow',4, true);
+        this.newBomb.animations.play('grow',4, true);
     },
 
 
