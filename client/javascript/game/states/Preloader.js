@@ -27,11 +27,12 @@ WhackaMole.Preloader.prototype = {
 		this.load.image('crosshair', 'images/crosshair.png');
 		this.load.image('mole', 'images/newMole.png');
 		this.load.atlasJSONHash('mole', 'images/spritesheets/molepop.png', 'images/spritesheets/molepop.json');
-		this.load.atlasXML('bunny', 'images/spritesheets/bunny.png', 'images/spritesheets/bunny.xml');
-		this.load.atlasXML('spacerock', 'images/spritesheets/SpaceRock.png', 'images/spritesheets/SpaceRock.xml');
+		this.load.atlasJSONHash('mole', 'images/spritesheets/molepop.png', 'images/spritesheets/molepop.json');
+		this.load.atlasJSONHash('spacemole1', 'images/spritesheets/spacemole.png', 'images/spritesheets/spacemole.json');
+		this.load.atlasJSONHash('clouds', 'images/spritesheets/clouds.png', 'images/spritesheets/clouds.json');
+		this.load.atlasJSONHash('bombexplode', 'images/spritesheets/explosion.png', 'images/spritesheets/explosion.json');
 		this.load.image('explosion', 'images/explosion.png');
-		this.load.image('ghost', 'images/ghost.png');
-		this.load.audio('explosion_audio', 'audio/explosion.mp3');
+		this.load.audio('explosion_audio', 'audio/explosion_audio.mp3');
 		this.load.audio('hurt_audio', 'audio/hurt.mp3');
 		this.load.audio('select_audio', 'audio/select.mp3');
 		this.load.audio('game_audio', 'audio/bgm.mp3');
